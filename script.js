@@ -33,15 +33,15 @@ function render(tree) {
                 <li>
                   📂 <a href="#" onclick="toggle(this);return false;">${instrumen}</a>
                   <ul style="display:none">
-                    ${Object.keys(tree[status][judul]).map(jenis => `
+                    ${Object.keys(tree[status][judul][instrumen]).map(jenis => `
                       <li>
                         📂 <a href="#" onclick="toggle(this);return false;">${jenis}</a>
                         <ul style="display:none">
-                          ${Object.keys(tree[status][judul][jenis]).map(kode => `
+                          ${Object.keys(tree[status][judul][instrumen][jenis]).map(kode => `
                             <li>
                               📂 <a href="#" onclick="toggle(this);return false;">${kode}</a>
                               <ul style="display:none">
-                                ${tree[status][judul][jenis][kode].map(p => `
+                                ${tree[status][judul][instrumen][jenis][kode].map(p => `
                                   <li>
                                     📄 <a onclick="openPDF('pdf/${p.file}')">
                                       ${p.periode}
@@ -75,6 +75,7 @@ function toggle(el) {
 function openPDF(path) {
   document.getElementById("pdfViewer").src = path;
 }
+
 
 
 
