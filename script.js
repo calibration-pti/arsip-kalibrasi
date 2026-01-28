@@ -8,9 +8,10 @@ function build(data) {
   data.forEach(d => {
     tree[d.status] ??= {};
     tree[d.status][d.judul] ??= {};
-    tree[d.status][d.judul][d.jenis] ??= {};
-    tree[d.status][d.judul][d.jenis][d.kode] ??= [];
-    tree[d.status][d.judul][d.jenis][d.kode].push(d);
+    tree[d.status][d.judul][d.instrumen] ??= {};    
+    tree[d.status][d.judul][d.instrumen][d.jenis] ??= {};
+    tree[d.status][d.judul][d.instrumen][d.jenis][d.kode] ??= [];
+    tree[d.status][d.judul][d.instrumen][d.jenis][d.kode].push(d);
   });
 
   render(tree);
@@ -74,5 +75,6 @@ function toggle(el) {
 function openPDF(path) {
   document.getElementById("pdfViewer").src = path;
 }
+
 
 
