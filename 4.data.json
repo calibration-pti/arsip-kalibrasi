@@ -1,0 +1,26 @@
+[
+  {
+    "status": "Aktif",
+    "judul": "Arsip Timbangan",
+    "jenis": "Sertifikat",
+    "kode": "WI002",
+    "periode": "Juli 2024",
+    "file": "Aktif/Timbangan/Sertifikat/WI002/WI002_Juli_2024.pdf"
+  },
+  {
+    "status": "Aktif",
+    "judul": "Arsip Timbangan",
+    "jenis": "Sertifikat",
+    "kode": "WI002",
+    "periode": "September 2024",
+    "file": "Aktif/Timbangan/Sertifikat/WI002/WI002_September_2024.pdf"
+  },
+  {
+    "status": "In Aktif",
+    "judul": "Arsip Timbangan",
+    "jenis": "Sertifikat",
+    "kode": "WI232",
+    "periode": "Juli 2024",
+    "file": "Aktif/Timbangan/Sertifikat/WI232/WI232_Juli_2024.pdf"
+  }
+]
