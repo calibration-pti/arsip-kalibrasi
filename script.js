@@ -29,7 +29,7 @@ function render(tree) {
           <li>
             📁 <a href="#" onclick="toggle(this);return false;">${judul}</a>
             <ul style="display:none">
-              ${Object.keys(tree[status][judul]).map(jenis => `
+              ${Object.keys(tree[status][judul]).map(instrumen => `
                 <li>
                   📂 <a href="#" onclick="toggle(this);return false;">${instrumen}</a>
                   <ul style="display:none">
@@ -75,6 +75,7 @@ function toggle(el) {
 function openPDF(path) {
   document.getElementById("pdfViewer").src = path;
 }
+
 
 
 
