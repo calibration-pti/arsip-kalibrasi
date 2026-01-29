@@ -25,33 +25,38 @@ function render(tree) {
 
   for (const status in tree) {
     container.innerHTML += `
-      <h3 onclick="toggle(this)">
-        <span class="icon">○</span> ${status}
-      </h3>
+      <div class="tree-item">
+        <span class="icon" onclick="toggle(this)">+</span>
+        <span class="folder-name" onclick="selectItem(this)">${status}</span>
+      </div>
       <ul style="display:none">
         ${Object.keys(tree[status]).map(judul => `
           <li>
-            📁 <a href="#" onclick="toggle(this);return false;">
-              <span class="icon">○</span> ${judul}
-            </a>
+            <div class="tree-item">
+              <span class="icon" onclick="toggle(this)">+</span>
+              <span class="folder-name" onclick="selectItem(this)">${judul}</span>
+            </div>
             <ul style="display:none">
               ${Object.keys(tree[status][judul]).map(instrumen => `
                 <li>
-                  📂 <a href="#" onclick="toggle(this);return false;">
-                    <span class="icon">○</span> ${instrumen}
-                  </a>
+                  <div class="tree-item">
+                    <span class="icon" onclick="toggle(this)">+</span>
+                    <span class="folder-name" onclick="selectItem(this)">${instrumen}</span>
+                  </div>
                   <ul style="display:none">
                     ${Object.keys(tree[status][judul][instrumen]).map(jenis => `
                       <li>
-                        📂 <a href="#" onclick="toggle(this);return false;">
-                          <span class="icon">○</span> ${jenis}
-                        </a>
+                        <div class="tree-item">
+                          <span class="icon" onclick="toggle(this)">+</span>
+                          <span class="folder-name" onclick="selectItem(this)">${jenis}</span>
+                        </div>
                         <ul style="display:none">
                           ${Object.keys(tree[status][judul][instrumen][jenis]).map(kode => `
                             <li>
-                              📂 <a href="#" onclick="toggle(this);return false;">
-                                <span class="icon">○</span> ${kode}
-                              </a>
+                              <div class="tree-item">
+                                <span class="icon" onclick="toggle(this)">+</span>
+                                <span class="folder-name" onclick="selectItem(this)">${kode}</span>
+                              </div>
                               <ul style="display:none">
                                 ${tree[status][judul][instrumen][jenis][kode].map(p => `
                                   <li>
@@ -77,18 +82,24 @@ function render(tree) {
   }
 }
 
-function toggle(el) {
-  const next = el.nextElementSibling;
-  if (next) {
-    const icon = el.querySelector(".icon");
-    if (next.style.display === "none") {
-      next.style.display = "block";
-      if (icon) icon.textContent = "▼";
-    } else {
-      next.style.display = "none";
-      if (icon) icon.textContent = "○";
-    }
+function toggle(iconEl) {
+  const nextUl = iconEl.parentElement.nextElementSibling;
+  if (!nextUl) return;
+
+  if (nextUl.style.display === "none") {
+    nextUl.style.display = "block";
+    iconEl.textContent = "-";
+  } else {
+    nextUl.style.display = "none";
+    iconEl.textContent = "+";
   }
+}
+
+function selectItem(el) {
+  // hapus active-item sebelumnya
+  document.querySelectorAll(".active-item").forEach(item => item.classList.remove("active-item"));
+
+  el.parentElement.classList.add("active-item");
 }
 
 function openPDF(url) {
@@ -104,6 +115,7 @@ function openPDF(url) {
   }
   document.getElementById("pdfViewer").src = url;
 }
+
 
 
 
