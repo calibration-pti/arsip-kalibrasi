@@ -9,14 +9,13 @@ body {
   height: 100vh;
 }
 
-/* ===== SIDEBAR ===== */
+/* SIDEBAR */
 .sidebar {
   width: 300px;
   padding: 15px;
   background: linear-gradient(180deg, #ffffff, #f1f5fb);
   border-right: 2px solid #dbe2ea;
   overflow-y: auto;
-  flex-shrink: 0;
 }
 
 .sidebar h2 {
@@ -31,17 +30,10 @@ body {
   margin-bottom: 10px;
   border-radius: 8px;
   border: 1px solid #ccc;
-  outline: none;
 }
 
 #searchResult {
   font-size: 13px;
-  margin-bottom: 15px;
-}
-
-#searchResult h4 {
-  margin: 8px 0 4px;
-  color: #1f3c88;
 }
 
 .search-item {
@@ -52,30 +44,23 @@ body {
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 
-.search-item a {
-  font-size: 12px;
-}
-
-/* ===== TREE ===== */
+/* TREE */
 ul {
   list-style: none;
   padding-left: 15px;
-}
-
-li {
-  margin: 5px 0;
 }
 
 .tree-item {
   display: flex;
   align-items: center;
   cursor: pointer;
+  margin: 4px 0;
 }
 
 .icon {
   width: 16px;
-  font-weight: bold;
   text-align: center;
+  font-weight: bold;
   margin-right: 4px;
 }
 
@@ -90,7 +75,7 @@ li {
   border-radius: 4px;
 }
 
-/* ===== VIEWER ===== */
+/* VIEWER */
 .viewer {
   flex: 1;
   padding: 15px;
@@ -111,7 +96,7 @@ iframe {
   box-shadow: 0 4px 15px rgba(0,0,0,0.15);
 }
 
-/* ===== MOBILE ===== */
+/* MOBILE */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
