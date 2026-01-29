@@ -72,10 +72,21 @@ function toggle(el) {
   }
 }
 
-function openPDF(path) {
-  document.getElementById("pdfViewer").src = path;
+function openPDF(url) {
+  // Cek apakah link Google Drive
+  if (url.includes("drive.google.com")) {
+    // Ambil file ID dari link sharing
+    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      const fileId = match[1];
+      // Buat direct embed link
+      url = `https://drive.google.com/uc?export=view&id=${fileId}`;
+    }
+  }
+  
+  // Tampilkan PDF di iframe
+  document.getElementById("pdfViewer").src = url;
 }
-
 
 
 
