@@ -10,7 +10,14 @@
   <!-- KIRI -->
   <div class="sidebar">
     <h2>📂 Sistem Arsip</h2>
-    <div class="status-badge">Status: AKTIF</div>
+  <!-- 🔍 SEARCH HARUS DI SINI -->
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Cari kode / WI / instrumen..."
+      oninput="searchArsip(this.value)"
+    >
+
     <div id="arsip"></div>
   </div>
 
@@ -24,4 +31,5 @@
 <script src="script.js"></script>
 </body>
 </html>
+
 
