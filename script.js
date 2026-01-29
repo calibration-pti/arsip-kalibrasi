@@ -1,10 +1,3 @@
-// Ambil parameter folder dari QR
-function getQueryParam(name) {
-  const params = new URLSearchParams(window.location.search);
-  return params.get(name);
-}
-const folderToOpen = getQueryParam("folder");
-
 // Fetch data JSON
 fetch("data.json")
   .then(res => res.json())
@@ -23,21 +16,7 @@ function build(data) {
   });
 
   render(tree);
-  // Jika ada folder dari QR, buka otomatis
-  if (folderToOpen) {
-    document.querySelectorAll(".folder-name").forEach(el => {
-      if (el.textContent.trim() === folderToOpen) {
-        const icon = el.parentElement.querySelector(".icon");
-        const nextUl = el.parentElement.nextElementSibling;
-        if (nextUl && icon) {
-          nextUl.style.display = "block";
-          icon.textContent = "-";
-        }
-        selectItem(el);
-        el.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    });
-  }
+  
 }
 
 function render(tree) {
@@ -110,39 +89,6 @@ function toggle(el) {
       if (icon) icon.textContent = "○";
     }
   }
-
-  function selectItem(el) {
-    document.querySelectorAll(".active-item").forEach(item => item.classList.remove("active-item"));
-    el.parentElement.classList.add("active-item");
-  }
-
-  function openFolderByName(folderName) {
-  document.querySelectorAll(".folder-name").forEach(el => {
-    if (el.textContent.trim() === folderName) {
-      // buka semua parent <ul>
-      let parent = el.parentElement;
-      while (parent && parent.tagName !== "BODY") {
-        const icon = parent.querySelector(".icon");
-        const nextUl = parent.nextElementSibling;
-        if (nextUl && icon) {
-          nextUl.style.display = "block";
-          icon.textContent = "-";
-        }
-        parent = parent.parentElement.closest(".tree-item") || parent.parentElement;
-      }
-
-      // tandai aktif
-      selectItem(el);
-
-      // scroll ke folder
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  });
-}
-
-// setelah tree di-render
-if (folderToOpen) {
-  openFolderByName(folderToOpen);
 }
 
 function openPDF(url) {
@@ -158,6 +104,7 @@ function openPDF(url) {
   }
   document.getElementById("pdfViewer").src = url;
 }
+
 
 
 
