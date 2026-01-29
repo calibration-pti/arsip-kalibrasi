@@ -81,10 +81,10 @@ function toggle(el) {
     const icon = el.querySelector(".icon");
     if (next.style.display === "none") {
       next.style.display = "block";
-      if (icon) icon.textContent = "-";
+      if (icon) icon.textContent = "[-]";
     } else {
       next.style.display = "none";
-      if (icon) icon.textContent = "+";
+      if (icon) icon.textContent = "[+]";
     }
   }
 }
@@ -103,6 +103,7 @@ function openPDF(url) {
   }
   document.getElementById("pdfViewer").src = url;
 }
+
 
 
 
