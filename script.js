@@ -1,4 +1,4 @@
-fetch("data.json")
+fetch("4.data.json")
   .then(res => res.json())
   .then(data => build(data));
 
@@ -7,11 +7,11 @@ function build(data) {
 
   data.forEach(d => {
     tree[d.status] ??= {};
-    tree[d.status][d.judul] ??= {};
-    tree[d.status][d.judul][d.instrumen] ??= {};    
-    tree[d.status][d.judul][d.instrumen][d.jenis] ??= {};
-    tree[d.status][d.judul][d.instrumen][d.jenis][d.kode] ??= [];
-    tree[d.status][d.judul][d.instrumen][d.jenis][d.kode].push(d);
+    tree[d.status][d.judul] ??= {};    
+    tree[d.status][d.judul][instrumen] ??= {};
+    tree[d.status][d.judul][instrumen][d.jenis] ??= {};
+    tree[d.status][d.judul][instrumen][d.jenis][d.kode] ??= [];
+    tree[d.status][d.judul][instrumen][d.jenis][d.kode].push(d);
   });
 
   render(tree);
@@ -29,26 +29,26 @@ function render(tree) {
           <li>
             📁 <a href="#" onclick="toggle(this);return false;">${judul}</a>
             <ul style="display:none">
-              ${Object.keys(tree[status][judul]).map(instrumen => `
+              ${Object.keys(tree[status][judul]).map(jenis => `
                 <li>
-                  📂 <a href="#" onclick="toggle(this);return false;">${instrumen}</a>
+                  📂 <a href="#" onclick="toggle(this);return false;">${jenis}</a>
                   <ul style="display:none">
-                    ${Object.keys(tree[status][judul][instrumen]).map(jenis => `
+                    ${Object.keys(tree[status][judul]).map(jenis => `
                       <li>
                         📂 <a href="#" onclick="toggle(this);return false;">${jenis}</a>
                         <ul style="display:none">
-                          ${Object.keys(tree[status][judul][instrumen][jenis]).map(kode => `
+                          ${Object.keys(tree[status][judul][jenis]).map(kode => `
                             <li>
                               📂 <a href="#" onclick="toggle(this);return false;">${kode}</a>
                               <ul style="display:none">
-                                ${tree[status][judul][instrumen][jenis][kode].map(p => `
+                                ${tree[status][judul][jenis][kode].map(p => `
                                   <li>
-                                    📄 <a onclick="openPDF('${p.file}')">
+                                    📄 <a onclick="openPDF('pdf/${p.file}')">
                                       ${p.periode}
                                     </a>
                                   </li>
                                 `).join("")}
-                              </ul>                        
+                              </ul>                                  
                             </li>
                           `).join("")}
                         </ul>
@@ -72,16 +72,6 @@ function toggle(el) {
   }
 }
 
-function openPDF(url) {
-  // Jika link Google Drive
-  if (url.includes("drive.google.com")) {
-    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    if (match && match[1]) {
-      const fileId = match[1];
-      url = `https://drive.google.com/uc?export=view&id=${fileId}`;
-    }
-  }
-  document.getElementById("pdfViewer").src = url;
+function openPDF(path) {
+  document.getElementById("pdfViewer").src = path;
 }
-</script>
-
