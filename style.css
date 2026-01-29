@@ -1,3 +1,4 @@
+
 body {
   margin: 0;
   font-family: "Segoe UI", sans-serif;
@@ -9,47 +10,17 @@ body {
   height: 100vh;
 }
 
-/* SIDEBAR */
+/* ===== SIDEBAR ===== */
 .sidebar {
   width: 300px;
-  padding: 15px;
+  padding: 20px;
   background: linear-gradient(180deg, #ffffff, #f1f5fb);
   border-right: 2px solid #dbe2ea;
   overflow-y: auto;
+  flex-shrink: 0;
 }
 
-.sidebar h2 {
-  margin-top: 0;
-  color: #1f3c88;
-}
-
-/* SEARCH */
-#searchInput {
-  width: 100%;
-  padding: 8px 10px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-#searchResult {
-  font-size: 13px;
-}
-
-.search-item {
-  background: #fff;
-  padding: 6px;
-  margin-bottom: 6px;
-  border-radius: 6px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-}
-
-/* TREE */
-ul {
-  list-style: none;
-  padding-left: 15px;
-}
-
+/* Tree items */
 .tree-item {
   display: flex;
   align-items: center;
@@ -58,16 +29,18 @@ ul {
 }
 
 .icon {
+  display: inline-block;
   width: 16px;
   text-align: center;
+  margin-right: 5px;
   font-weight: bold;
-  margin-right: 4px;
 }
 
 .folder-name {
-  cursor: pointer;
+  flex: 1;
 }
 
+/* Aktif folder */
 .active-item > .folder-name {
   background: #1f3c88;
   color: white;
@@ -75,7 +48,28 @@ ul {
   border-radius: 4px;
 }
 
-/* VIEWER */
+/* List styles */
+ul {
+  list-style: none;
+  padding-left: 15px;
+}
+
+li {
+  margin: 4px 0;
+}
+
+a {
+  color: #1f3c88;
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ===== VIEWER ===== */
 .viewer {
   flex: 1;
   padding: 15px;
@@ -83,20 +77,14 @@ ul {
   flex-direction: column;
 }
 
-.viewer-header {
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
 iframe {
   flex: 1;
   border: none;
   border-radius: 8px;
-  background: white;
   box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  background: white;
 }
 
-/* MOBILE */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
@@ -104,12 +92,12 @@ iframe {
 
   .sidebar {
     width: 100%;
-    height: 45vh;
+    height: 40vh;
     border-right: none;
     border-bottom: 2px solid #dbe2ea;
   }
 
   .viewer {
-    height: 55vh;
+    height: 60vh;
   }
 }
