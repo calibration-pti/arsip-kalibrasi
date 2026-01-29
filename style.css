@@ -133,3 +133,19 @@ iframe {
   border-radius: 4px;
 }
 
+/* ===== SEARCH ===== */
+#searchInput {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #cfd8e3;
+  font-size: 14px;
+  outline: none;
+}
+
+#searchInput:focus {
+  border-color: #1f3c88;
+  box-shadow: 0 0 0 2px rgba(31, 60, 136, 0.15);
+}
+
