@@ -117,15 +117,18 @@ function toggle(el) {
   }
 
   function openFolderByName(folderName) {
-    document.querySelectorAll(".folder-name").forEach(el => {
-    // cek folder target
+  document.querySelectorAll(".folder-name").forEach(el => {
     if (el.textContent.trim() === folderName) {
-      // buka folder target
-      const icon = el.parentElement.querySelector(".icon");
-      const nextUl = el.parentElement.nextElementSibling;
-      if (nextUl && icon) {
-        nextUl.style.display = "block";
-        icon.textContent = "-";
+      // buka semua parent <ul>
+      let parent = el.parentElement;
+      while (parent && parent.tagName !== "BODY") {
+        const icon = parent.querySelector(".icon");
+        const nextUl = parent.nextElementSibling;
+        if (nextUl && icon) {
+          nextUl.style.display = "block";
+          icon.textContent = "-";
+        }
+        parent = parent.parentElement.closest(".tree-item") || parent.parentElement;
       }
 
       // tandai aktif
@@ -133,21 +136,13 @@ function toggle(el) {
 
       // scroll ke folder
       el.scrollIntoView({ behavior: "smooth", block: "center" });
-
-      // opsional: buka PDF pertama otomatis
-      const firstPdfLink = nextUl?.querySelector("a");
-      if (firstPdfLink) firstPdfLink.click();
-    } else {
-      // semua folder lain tetap tertutup
-      const nextUl = el.parentElement.nextElementSibling;
-      const icon = el.parentElement.querySelector(".icon");
-      if (nextUl && icon) {
-        nextUl.style.display = "none";
-        icon.textContent = "+";
-      }
-      el.parentElement.classList.remove("active-item");
     }
   });
+}
+
+// setelah tree di-render
+if (folderToOpen) {
+  openFolderByName(folderToOpen);
 }
 
 function openPDF(url) {
@@ -163,6 +158,7 @@ function openPDF(url) {
   }
   document.getElementById("pdfViewer").src = url;
 }
+
 
 
 
