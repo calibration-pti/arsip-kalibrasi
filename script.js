@@ -23,23 +23,33 @@ function render(tree) {
 
   for (const status in tree) {
     container.innerHTML += `
-      <h3 onclick="toggle(this)">▶ ${status}</h3>
+      <h3 onclick="toggle(this)">
+        <span class="icon">-</span> ${status}
+      </h3>
       <ul style="display:none">
         ${Object.keys(tree[status]).map(judul => `
           <li>
-            📁 <a href="#" onclick="toggle(this);return false;">${judul}</a>
+            📁 <a href="#" onclick="toggle(this);return false;">
+              <span class="icon">-</span> ${judul}
+            </a>
             <ul style="display:none">
               ${Object.keys(tree[status][judul]).map(instrumen => `
                 <li>
-                  📂 <a href="#" onclick="toggle(this);return false;">${instrumen}</a>
+                  📂 <a href="#" onclick="toggle(this);return false;">
+                    <span class="icon">-</span> ${instrumen}
+                  </a>
                   <ul style="display:none">
                     ${Object.keys(tree[status][judul][instrumen]).map(jenis => `
                       <li>
-                        📂 <a href="#" onclick="toggle(this);return false;">${jenis}</a>
+                        📂 <a href="#" onclick="toggle(this);return false;">
+                          <span class="icon">-</span> ${jenis}
+                        </a>
                         <ul style="display:none">
                           ${Object.keys(tree[status][judul][instrumen][jenis]).map(kode => `
                             <li>
-                              📂 <a href="#" onclick="toggle(this);return false;">${kode}</a>
+                              📂 <a href="#" onclick="toggle(this);return false;">
+                                <span class="icon">-</span> ${kode}
+                              </a>
                               <ul style="display:none">
                                 ${tree[status][judul][instrumen][jenis][kode].map(p => `
                                   <li>
@@ -68,9 +78,17 @@ function render(tree) {
 function toggle(el) {
   const next = el.nextElementSibling;
   if (next) {
-    next.style.display = next.style.display === "none" ? "block" : "none";
+    const icon = el.querySelector(".icon");
+    if (next.style.display === "none") {
+      next.style.display = "block";
+      if (icon) icon.textContent = "▶";
+    } else {
+      next.style.display = "none";
+      if (icon) icon.textContent = "-";
+    }
   }
 }
+
 
 function openPDF(url) {
   // Jika link Google Drive
@@ -85,6 +103,7 @@ function openPDF(url) {
   }
   document.getElementById("pdfViewer").src = url;
 }
+
 
 
 
