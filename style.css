@@ -107,3 +107,30 @@ iframe {
   }
 }
 
+.tree-item {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin: 4px 0;
+}
+
+.icon {
+  display: inline-block;
+  width: 16px;
+  text-align: center;
+  margin-right: 5px;
+  font-weight: bold;
+}
+
+.folder-name {
+  flex: 1;
+}
+
+.active-item > .folder-name {
+  background: #1f3c88;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+
