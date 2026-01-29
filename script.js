@@ -42,9 +42,9 @@ function render(tree) {
       <ul style="display:none">
         ${Object.keys(tree[status]).map(judul => `
           <li>
-            <div class="tree-item">
+          📁<div class="tree-item">
               <span class="icon" onclick="toggle(this)">+</span>
-            📁 <a href="#" <span class="folder-name" onclick="selectItem(this)">${judul}</span>
+              <span class="folder-name" onclick="selectItem(this)">${judul}</span>
             </div>
             <ul style="display:none">
               ${Object.keys(tree[status][judul]).map(instrumen => `
@@ -151,4 +151,5 @@ function openPDF(url) {
   }
   document.getElementById("pdfViewer").src = url;
 }
+
 
