@@ -85,10 +85,13 @@ function searchArsip(keyword) {
 
   if (!keyword || keyword.length < 2) return;
 
-  keyword = keyword.toLowerCase();
+  keyword = keyword.toLowerCase().trim();
 
   const hasil = allData.filter(d =>
-    d.kode.toLowerCase().includes(keyword)
+    (d.kode && d.kode.toLowerCase().includes(keyword)) ||
+    (d.jenis && d.jenis.toLowerCase().includes(keyword)) ||
+    (d.judul && d.judul.toLowerCase().includes(keyword)) ||
+    (d.status && d.status.toLowerCase().includes(keyword))
   );
 
   if (hasil.length === 0) {
@@ -126,3 +129,4 @@ function openPDF(url) {
   }
   document.getElementById("pdfViewer").src = url;
 }
+
