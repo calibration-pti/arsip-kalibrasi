@@ -1,3 +1,8 @@
+<div id="arsip"></div>
+
+<iframe id="pdfViewer" style="width:100%; height:600px;"></iframe>
+
+<script>
 fetch("data.json")
   .then(res => res.json())
   .then(data => build(data));
@@ -43,7 +48,7 @@ function render(tree) {
                               <ul style="display:none">
                                 ${tree[status][judul][instrumen][jenis][kode].map(p => `
                                   <li>
-                                    📄 <a onclick="openPDF('pdf/${p.file}')">
+                                    📄 <a onclick="openPDF('${p.file}')">
                                       ${p.periode}
                                     </a>
                                   </li>
@@ -72,10 +77,15 @@ function toggle(el) {
   }
 }
 
-function openPDF(path) {
-  document.getElementById("pdfViewer").src = path;
+function openPDF(url) {
+  // Jika link Google Drive
+  if (url.includes("drive.google.com")) {
+    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      const fileId = match[1];
+      url = `https://drive.google.com/uc?export=view&id=${fileId}`;
+    }
+  }
+  document.getElementById("pdfViewer").src = url;
 }
-
-
-
-
+</script>
