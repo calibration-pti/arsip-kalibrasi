@@ -1,39 +1,26 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Sistem Arsip Kalibrasi</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <title>Status Arsip</title>
+  <link rel="stylesheet" href="2.style.css">
 </head>
 <body>
 
 <div class="container">
-
+  <!-- KIRI -->
   <div class="sidebar">
     <h2>📂 Sistem Arsip</h2>
-
-    <input
-      type="text"
-      id="searchInput"
-      placeholder="Cari WI002 / instrumen / jenis..."
-      oninput="searchArsip(this.value)"
-    >
-
-    <div id="searchResult"></div>
-
-    <hr>
-
+    <div class="status-badge">Status: AKTIF</div>
     <div id="arsip"></div>
   </div>
 
+  <!-- KANAN -->
   <div class="viewer">
     <div class="viewer-header">📄 Preview Dokumen</div>
     <iframe id="pdfViewer"></iframe>
   </div>
-
 </div>
 
-<script src="script.js"></script>
+<script src="3.script.js"></script>
 </body>
 </html>
