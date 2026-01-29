@@ -44,7 +44,7 @@ function render(tree) {
           <li>
             <div class="tree-item">
               <span class="icon" onclick="toggle(this)">+</span>
-              <span class="folder-name" onclick="selectItem(this)">${judul}</span>
+            📁 <a href="#" <span class="folder-name" onclick="selectItem(this)">${judul}</span>
             </div>
             <ul style="display:none">
               ${Object.keys(tree[status][judul]).map(instrumen => `
@@ -151,3 +151,4 @@ function openPDF(url) {
   }
   document.getElementById("pdfViewer").src = url;
 }
+
