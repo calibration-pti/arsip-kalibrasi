@@ -1,60 +1,72 @@
-let allData = [];
 
+// Ambil parameter folder dari QR
+function getQueryParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
+const folderToOpen = getQueryParam("folder");
+
+// Fetch data JSON
 fetch("data.json")
   .then(res => res.json())
-  .then(data => {
-    allData = data;
-    buildTree(data);
-  });
+  .then(data => build(data));
 
-function buildTree(data) {
+function build(data) {
   const tree = {};
 
   data.forEach(d => {
     tree[d.status] ??= {};
     tree[d.status][d.judul] ??= {};
-    tree[d.status][d.judul][d.instrumen] ??= {};
+    tree[d.status][d.judul][d.instrumen] ??= {};    
     tree[d.status][d.judul][d.instrumen][d.jenis] ??= {};
     tree[d.status][d.judul][d.instrumen][d.jenis][d.kode] ??= [];
     tree[d.status][d.judul][d.instrumen][d.jenis][d.kode].push(d);
   });
 
-  const c = document.getElementById("arsip");
-  c.innerHTML = "";
+  render(tree);
+
+  // Buka folder dari QR jika ada
+  if (folderToOpen) openFolderByName(folderToOpen);
+}
+
+// Render tree
+function render(tree) {
+  const container = document.getElementById("arsip");
+  container.innerHTML = "";
 
   for (const status in tree) {
-    c.innerHTML += `
+    container.innerHTML += `
       <div class="tree-item">
         <span class="icon" onclick="toggle(this)">+</span>
-        <span class="folder-name">${status}</span>
+        <span class="folder-name" onclick="selectItem(this)">${status}</span>
       </div>
       <ul style="display:none">
         ${Object.keys(tree[status]).map(judul => `
           <li>
             <div class="tree-item">
               <span class="icon" onclick="toggle(this)">+</span>
-              <span class="folder-name">${judul}</span>
+              <span class="folder-name" onclick="selectItem(this)">${judul}</span>
             </div>
             <ul style="display:none">
               ${Object.keys(tree[status][judul]).map(instrumen => `
                 <li>
                   <div class="tree-item">
                     <span class="icon" onclick="toggle(this)">+</span>
-                    <span class="folder-name">${instrumen}</span>
+                    <span class="folder-name" onclick="selectItem(this)">${instrumen}</span>
                   </div>
                   <ul style="display:none">
                     ${Object.keys(tree[status][judul][instrumen]).map(jenis => `
                       <li>
                         <div class="tree-item">
                           <span class="icon" onclick="toggle(this)">+</span>
-                          <span class="folder-name">${jenis}</span>
+                          <span class="folder-name" onclick="selectItem(this)">${jenis}</span>
                         </div>
                         <ul style="display:none">
                           ${Object.keys(tree[status][judul][instrumen][jenis]).map(kode => `
                             <li>
                               <div class="tree-item">
                                 <span class="icon" onclick="toggle(this)">+</span>
-                                <span class="folder-name">${kode}</span>
+                                <span class="folder-name" onclick="selectItem(this)">${kode}</span>
                               </div>
                               <ul style="display:none">
                                 ${tree[status][judul][instrumen][jenis][kode].map(p => `
@@ -79,56 +91,68 @@ function buildTree(data) {
   }
 }
 
-function toggle(el) {
-  const ul = el.parentElement.nextElementSibling;
-  if (!ul) return;
-  const open = ul.style.display === "block";
-  ul.style.display = open ? "none" : "block";
-  el.textContent = open ? "+" : "-";
+// Toggle folder
+function toggle(iconEl) {
+  const nextUl = iconEl.parentElement.nextElementSibling;
+  if (!nextUl) return;
+
+  if (nextUl.style.display === "none") {
+    nextUl.style.display = "block";
+    iconEl.textContent = "-";
+  } else {
+    nextUl.style.display = "none";
+    iconEl.textContent = "+";
+  }
 }
 
-/* SEARCH */
-function searchArsip(keyword) {
-  const box = document.getElementById("searchResult");
-  box.innerHTML = "";
+// Tandai folder aktif
+function selectItem(el) {
+  document.querySelectorAll(".active-item").forEach(item => item.classList.remove("active-item"));
+  el.parentElement.classList.add("active-item");
+}
 
-  if (!keyword || keyword.length < 2) return;
+// Buka folder target dari QR (hanya folder target terbuka, yang lain tetap tertutup)
+function openFolderByName(folderName) {
+  document.querySelectorAll(".folder-name").forEach(el => {
+    const nextUl = el.parentElement.nextElementSibling;
+    const icon = el.parentElement.querySelector(".icon");
 
-  keyword = keyword.toLowerCase();
+    if (el.textContent.trim() === folderName) {
+      // buka folder target
+      if (nextUl && icon) {
+        nextUl.style.display = "block";
+        icon.textContent = "-";
+      }
+      selectItem(el);
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
 
-  const hasil = allData.filter(d =>
-    (d.kode && d.kode.toLowerCase().includes(keyword)) ||
-    (d.instrumen && d.instrumen.toLowerCase().includes(keyword)) ||
-    (d.jenis && d.jenis.toLowerCase().includes(keyword))
-  );
-
-  if (hasil.length === 0) {
-    box.innerHTML = "<p>❌ Arsip tidak ditemukan</p>";
-    return;
-  }
-
-  const group = {};
-  hasil.forEach(d => {
-    group[d.status] ??= [];
-    group[d.status].push(d);
+      // opsional: buka PDF pertama otomatis
+      const firstPdfLink = nextUl?.querySelector("a");
+      if (firstPdfLink) firstPdfLink.click();
+    } else {
+      // tutup semua folder lain
+      if (nextUl && icon) {
+        nextUl.style.display = "none";
+        icon.textContent = "+";
+      }
+      el.parentElement.classList.remove("active-item");
+    }
   });
-
-  for (const status in group) {
-    box.innerHTML += `<h4>${status}</h4>`;
-    group[status].forEach(d => {
-      box.innerHTML += `
-        <div class="search-item">
-          <b>${d.kode}</b> (${d.jenis})<br>
-          <small>${d.instrumen}</small><br>
-          <small>${d.periode}</small><br>
-          <a onclick="openPDF('${d.file}')">Buka PDF</a>
-        </div>
-      `;
-    });
-  }
 }
 
-/* PDF */
+// Buka PDF
 function openPDF(url) {
   if (url.includes("drive.google.com")) {
-    const id
+    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      const fileId = match[1];
+      const directLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
+      url = `https://docs.google.com/gview?url=${encodeURIComponent(directLink)}&embedded=true`;
+    }
+  }
+  document.getElementById("pdfViewer").src = url;
+}
+</script>
+
+</body>
+</html>
