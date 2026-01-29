@@ -110,11 +110,44 @@ function toggle(el) {
       if (icon) icon.textContent = "○";
     }
   }
-}
 
-function selectItem(el) {
-  document.querySelectorAll(".active-item").forEach(item => item.classList.remove("active-item"));
-  el.parentElement.classList.add("active-item");
+  function selectItem(el) {
+    document.querySelectorAll(".active-item").forEach(item => item.classList.remove("active-item"));
+    el.parentElement.classList.add("active-item");
+  }
+
+  function openFolderByName(folderName) {
+    document.querySelectorAll(".folder-name").forEach(el => {
+    // cek folder target
+    if (el.textContent.trim() === folderName) {
+      // buka folder target
+      const icon = el.parentElement.querySelector(".icon");
+      const nextUl = el.parentElement.nextElementSibling;
+      if (nextUl && icon) {
+        nextUl.style.display = "block";
+        icon.textContent = "-";
+      }
+
+      // tandai aktif
+      selectItem(el);
+
+      // scroll ke folder
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      // opsional: buka PDF pertama otomatis
+      const firstPdfLink = nextUl?.querySelector("a");
+      if (firstPdfLink) firstPdfLink.click();
+    } else {
+      // semua folder lain tetap tertutup
+      const nextUl = el.parentElement.nextElementSibling;
+      const icon = el.parentElement.querySelector(".icon");
+      if (nextUl && icon) {
+        nextUl.style.display = "none";
+        icon.textContent = "+";
+      }
+      el.parentElement.classList.remove("active-item");
+    }
+  });
 }
 
 function openPDF(url) {
@@ -130,7 +163,6 @@ function openPDF(url) {
   }
   document.getElementById("pdfViewer").src = url;
 }
-
 
 
 
