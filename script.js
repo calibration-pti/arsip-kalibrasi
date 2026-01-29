@@ -1,3 +1,4 @@
+// Fetch data JSON
 fetch("data.json")
   .then(res => res.json())
   .then(data => build(data));
@@ -15,6 +16,7 @@ function build(data) {
   });
 
   render(tree);
+  
 }
 
 function render(tree) {
@@ -23,23 +25,38 @@ function render(tree) {
 
   for (const status in tree) {
     container.innerHTML += `
-      <h3 onclick="toggle(this)">▶ ${status}</h3>
+      <div class="tree-item">
+        <span class="icon" onclick="toggle(this)">+</span>
+        <span class="folder-name" onclick="selectItem(this)">${status}</span>
+      </div>
       <ul style="display:none">
         ${Object.keys(tree[status]).map(judul => `
           <li>
-            📁 <a href="#" onclick="toggle(this);return false;">${judul}</a>
+            <div class="tree-item">
+              <span class="icon" onclick="toggle(this)">+</span>
+              <span class="folder-name" onclick="selectItem(this)">${judul}</span>
+            </div>
             <ul style="display:none">
               ${Object.keys(tree[status][judul]).map(instrumen => `
                 <li>
-                  📂 <a href="#" onclick="toggle(this);return false;">${instrumen}</a>
+                  <div class="tree-item">
+                    <span class="icon" onclick="toggle(this)">+</span>
+                    <span class="folder-name" onclick="selectItem(this)">${instrumen}</span>
+                  </div>
                   <ul style="display:none">
                     ${Object.keys(tree[status][judul][instrumen]).map(jenis => `
                       <li>
-                        📂 <a href="#" onclick="toggle(this);return false;">${jenis}</a>
+                        <div class="tree-item">
+                          <span class="icon" onclick="toggle(this)">+</span>
+                          <span class="folder-name" onclick="selectItem(this)">${jenis}</span>
+                        </div>
                         <ul style="display:none">
                           ${Object.keys(tree[status][judul][instrumen][jenis]).map(kode => `
                             <li>
-                              📂 <a href="#" onclick="toggle(this);return false;">${kode}</a>
+                              <div class="tree-item">
+                                <span class="icon" onclick="toggle(this)">+</span>
+                                <span class="folder-name" onclick="selectItem(this)">${kode}</span>
+                              </div>
                               <ul style="display:none">
                                 ${tree[status][judul][instrumen][jenis][kode].map(p => `
                                   <li>
@@ -65,27 +82,47 @@ function render(tree) {
   }
 }
 
-function toggle(el) {
-  const next = el.nextElementSibling;
-  if (next) {
-    next.style.display = next.style.display === "none" ? "block" : "none";
+function toggle(iconEl) {
+  const nextUl = iconEl.parentElement.nextElementSibling;
+  if (!nextUl) return;
+
+  if (nextUl.style.display === "none") {
+    nextUl.style.display = "block";
+    iconEl.textContent = "-";
+  } else {
+    nextUl.style.display = "none";
+    iconEl.textContent = "+";
   }
 }
 
+function selectItem(el) {
+  // hapus active-item sebelumnya
+  document.querySelectorAll(".active-item").forEach(item => item.classList.remove("active-item"));
+
+  el.parentElement.classList.add("active-item");
+}
+
 function openPDF(url) {
-  // Cek apakah link Google Drive
+  // Jika link Google Drive
   if (url.includes("drive.google.com")) {
-    // Ambil file ID dari link sharing
     const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
     if (match && match[1]) {
       const fileId = match[1];
-      // Buat direct embed link
-      url = `https://drive.google.com/uc?export=view&id=${fileId}`;
+      const directLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
+      // Pakai Google Docs Viewer agar tampil di iframe
+      url = `https://docs.google.com/gview?url=${encodeURIComponent(directLink)}&embedded=true`;
     }
   }
-  
-  // Tampilkan PDF di iframe
   document.getElementById("pdfViewer").src = url;
 }
+
+
+
+
+
+
+
+
+
 
 
