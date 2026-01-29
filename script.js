@@ -24,31 +24,31 @@ function render(tree) {
   for (const status in tree) {
     container.innerHTML += `
       <h3 onclick="toggle(this)">
-        <span class="icon">+</span> ${status}
+        <span class="icon">○</span> ${status}
       </h3>
       <ul style="display:none">
         ${Object.keys(tree[status]).map(judul => `
           <li>
             📁 <a href="#" onclick="toggle(this);return false;">
-              <span class="icon">+</span> ${judul}
+              <span class="icon">○</span> ${judul}
             </a>
             <ul style="display:none">
               ${Object.keys(tree[status][judul]).map(instrumen => `
                 <li>
                   📂 <a href="#" onclick="toggle(this);return false;">
-                    <span class="icon">+</span> ${instrumen}
+                    <span class="icon">○</span> ${instrumen}
                   </a>
                   <ul style="display:none">
                     ${Object.keys(tree[status][judul][instrumen]).map(jenis => `
                       <li>
                         📂 <a href="#" onclick="toggle(this);return false;">
-                          <span class="icon">+</span> ${jenis}
+                          <span class="icon">○</span> ${jenis}
                         </a>
                         <ul style="display:none">
                           ${Object.keys(tree[status][judul][instrumen][jenis]).map(kode => `
                             <li>
                               📂 <a href="#" onclick="toggle(this);return false;">
-                                <span class="icon">+</span> ${kode}
+                                <span class="icon">○</span> ${kode}
                               </a>
                               <ul style="display:none">
                                 ${tree[status][judul][instrumen][jenis][kode].map(p => `
@@ -84,7 +84,7 @@ function toggle(el) {
       if (icon) icon.textContent = "▼";
     } else {
       next.style.display = "none";
-      if (icon) icon.textContent = "+";
+      if (icon) icon.textContent = "○";
     }
   }
 }
@@ -103,6 +103,7 @@ function openPDF(url) {
   }
   document.getElementById("pdfViewer").src = url;
 }
+
 
 
 
