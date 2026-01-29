@@ -1,39 +1,24 @@
-// Ambil parameter folder dari QR
-function getQueryParam(name) {
-  const params = new URLSearchParams(window.location.search);
-  return params.get(name);
-}
-const folderToOpen = getQueryParam("folder");
+let allData = [];
 
-let arsipData = [];
-
+// ambil data
 fetch("data.json")
   .then(res => res.json())
   .then(data => {
-    arsipData = data;
-    build(data);
+    allData = data;
+    buildTree(data);
   });
 
-function build(data) {
+// ================== BUILD TREE ==================
+function buildTree(data) {
   const tree = {};
-
   data.forEach(d => {
     tree[d.status] ??= {};
     tree[d.status][d.judul] ??= {};
-    tree[d.status][d.judul][d.instrumen] ??= {};    
-    tree[d.status][d.judul][d.instrumen][d.jenis] ??= {};
-    tree[d.status][d.judul][d.instrumen][d.jenis][d.kode] ??= [];
-    tree[d.status][d.judul][d.instrumen][d.jenis][d.kode].push(d);
+    tree[d.status][d.judul][d.jenis] ??= {};
+    tree[d.status][d.judul][d.jenis][d.kode] ??= [];
+    tree[d.status][d.judul][d.jenis][d.kode].push(d);
   });
 
-  render(tree);
-
-  // Buka folder dari QR jika ada
-  if (folderToOpen) openFolderByName(folderToOpen);
-}
-
-// Render tree
-function render(tree) {
   const container = document.getElementById("arsip");
   container.innerHTML = "";
 
@@ -41,43 +26,33 @@ function render(tree) {
     container.innerHTML += `
       <div class="tree-item">
         <span class="icon" onclick="toggle(this)">+</span>
-        <span class="folder-name" onclick="selectItem(this)">${status}</span>
+        <span class="folder-name">${status}</span>
       </div>
       <ul style="display:none">
         ${Object.keys(tree[status]).map(judul => `
           <li>
             <div class="tree-item">
               <span class="icon" onclick="toggle(this)">+</span>
-             📁<span class="folder-name" onclick="selectItem(this)">${judul}</span>
+              <span class="folder-name">${judul}</span>
             </div>
             <ul style="display:none">
-              ${Object.keys(tree[status][judul]).map(instrumen => `
+              ${Object.keys(tree[status][judul]).map(jenis => `
                 <li>
                   <div class="tree-item">
                     <span class="icon" onclick="toggle(this)">+</span>
-                    <span class="folder-name" onclick="selectItem(this)">${instrumen}</span>
+                    <span class="folder-name">${jenis}</span>
                   </div>
                   <ul style="display:none">
-                    ${Object.keys(tree[status][judul][instrumen]).map(jenis => `
+                    ${Object.keys(tree[status][judul][jenis]).map(kode => `
                       <li>
                         <div class="tree-item">
                           <span class="icon" onclick="toggle(this)">+</span>
-                          <span class="folder-name" onclick="selectItem(this)">${jenis}</span>
+                          <span class="folder-name">${kode}</span>
                         </div>
                         <ul style="display:none">
-                          ${Object.keys(tree[status][judul][instrumen][jenis]).map(kode => `
+                          ${tree[status][judul][jenis][kode].map(p => `
                             <li>
-                              <div class="tree-item">
-                                <span class="icon" onclick="toggle(this)">+</span>
-                                <span class="folder-name" onclick="selectItem(this)">${kode}</span>
-                              </div>
-                              <ul style="display:none">
-                                ${tree[status][judul][instrumen][jenis][kode].map(p => `
-                                  <li>
-                                    📄 <a onclick="openPDF('${p.file}')">${p.periode}</a>
-                                  </li>
-                                `).join("")}
-                              </ul>
+                              📄 <a onclick="openPDF('${p.file}')">${p.periode}</a>
                             </li>
                           `).join("")}
                         </ul>
@@ -94,64 +69,60 @@ function render(tree) {
   }
 }
 
-// Toggle folder
-function toggle(iconEl) {
-  const ul = iconEl.parentElement.nextElementSibling;
+// ================== TOGGLE ==================
+function toggle(el) {
+  const ul = el.parentElement.nextElementSibling;
   if (!ul) return;
-
   const open = ul.style.display === "block";
   ul.style.display = open ? "none" : "block";
-  iconEl.textContent = open ? "+" : "-";
+  el.textContent = open ? "+" : "-";
 }
 
-document.getElementById("searchInput").addEventListener("input", e => {
-  const key = e.target.value.toLowerCase();
+// ================== SEARCH ==================
+function searchArsip(keyword) {
   const box = document.getElementById("searchResult");
   box.innerHTML = "";
 
-  if (key.length < 2) return;
+  if (!keyword || keyword.length < 2) return;
 
-  const results = arsipData.filter(d =>
-    d.kode.toLowerCase().includes(key)
+  keyword = keyword.toLowerCase();
+
+  const hasil = allData.filter(d =>
+    d.kode.toLowerCase().includes(keyword)
   );
 
-  const grouped = {};
-  results.forEach(d => {
-    if (!grouped[d.status]) grouped[d.status] = {};
-    if (!grouped[d.status][d.jenis]) grouped[d.status][d.jenis] = [];
-    grouped[d.status][d.jenis].push(d);
+  if (hasil.length === 0) {
+    box.innerHTML = "<p>❌ Arsip tidak ditemukan</p>";
+    return;
+  }
+
+  const group = {};
+  hasil.forEach(d => {
+    group[d.status] ??= [];
+    group[d.status].push(d);
   });
 
-  for (const status in grouped) {
+  for (const status in group) {
     box.innerHTML += `<h4>${status}</h4>`;
-
-    for (const jenis in grouped[status]) {
-      box.innerHTML += `<strong>${jenis}</strong>`;
-
-      grouped[status][jenis].forEach(p => {
-        box.innerHTML += `
-          <div class="search-item" onclick="openPDF('${p.file}')">
-            ${p.kode} – ${p.periode}
-          </div>
-        `;
-      });
-    }
+    group[status].forEach(d => {
+      box.innerHTML += `
+        <div class="search-item">
+          <b>${d.kode}</b> (${d.jenis})<br>
+          <small>${d.periode}</small><br>
+          <a onclick="openPDF('${d.file}')">Buka PDF</a>
+        </div>
+      `;
+    });
   }
-});
+}
 
-// Buka PDF
+// ================== PDF VIEWER ==================
 function openPDF(url) {
   if (url.includes("drive.google.com")) {
-    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    if (match && match[1]) {
-      const fileId = match[1];
-      const directLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
-      url = `https://docs.google.com/gview?url=${encodeURIComponent(directLink)}&embedded=true`;
+    const id = url.match(/\/d\/([^/]+)/)?.[1];
+    if (id) {
+      url = `https://docs.google.com/gview?url=https://drive.google.com/uc?id=${id}&embedded=true`;
     }
   }
   document.getElementById("pdfViewer").src = url;
 }
-
-
-
-
