@@ -1,4 +1,4 @@
-fetch("4.data.json")
+fetch("data.json")
   .then(res => res.json())
   .then(data => build(data));
 
@@ -75,3 +75,4 @@ function toggle(el) {
 function openPDF(path) {
   document.getElementById("pdfViewer").src = path;
 }
+
