@@ -1,3 +1,10 @@
+// Ambil parameter folder dari QR
+function getQueryParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
+const folderToOpen = getQueryParam("folder");
+
 // Fetch data JSON
 fetch("data.json")
   .then(res => res.json())
@@ -17,6 +24,8 @@ function build(data) {
 
   render(tree);
   
+  // Buka folder dari QR jika ada
+  if (folderToOpen) openFolderByName(folderToOpen);
 }
 
 function render(tree) {
@@ -102,6 +111,36 @@ function selectItem(el) {
   el.parentElement.classList.add("active-item");
 }
 
+// Buka folder target dari QR (hanya folder target terbuka, yang lain tetap tertutup)
+function openFolderByName(folderName) {
+  document.querySelectorAll(".folder-name").forEach(el => {
+    const nextUl = el.parentElement.nextElementSibling;
+    const icon = el.parentElement.querySelector(".icon");
+
+    if (el.textContent.trim() === folderName) {
+      // buka folder target
+      if (nextUl && icon) {
+        nextUl.style.display = "block";
+        icon.textContent = "-";
+      }
+      selectItem(el);
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      // opsional: buka PDF pertama otomatis
+      const firstPdfLink = nextUl?.querySelector("a");
+      if (firstPdfLink) firstPdfLink.click();
+    } else {
+      // tutup semua folder lain
+      if (nextUl && icon) {
+        nextUl.style.display = "none";
+        icon.textContent = "+";
+      }
+      el.parentElement.classList.remove("active-item");
+    }
+  });
+}
+
+
 function openPDF(url) {
   // Jika link Google Drive
   if (url.includes("drive.google.com")) {
@@ -115,6 +154,7 @@ function openPDF(url) {
   }
   document.getElementById("pdfViewer").src = url;
 }
+
 
 
 
