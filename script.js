@@ -1,6 +1,5 @@
 let allData = [];
 
-// ambil data
 fetch("data.json")
   .then(res => res.json())
   .then(data => {
@@ -8,22 +7,23 @@ fetch("data.json")
     buildTree(data);
   });
 
-// ================== BUILD TREE ==================
 function buildTree(data) {
   const tree = {};
+
   data.forEach(d => {
     tree[d.status] ??= {};
     tree[d.status][d.judul] ??= {};
-    tree[d.status][d.judul][d.jenis] ??= {};
-    tree[d.status][d.judul][d.jenis][d.kode] ??= [];
-    tree[d.status][d.judul][d.jenis][d.kode].push(d);
+    tree[d.status][d.judul][d.instrumen] ??= {};
+    tree[d.status][d.judul][d.instrumen][d.jenis] ??= {};
+    tree[d.status][d.judul][d.instrumen][d.jenis][d.kode] ??= [];
+    tree[d.status][d.judul][d.instrumen][d.jenis][d.kode].push(d);
   });
 
-  const container = document.getElementById("arsip");
-  container.innerHTML = "";
+  const c = document.getElementById("arsip");
+  c.innerHTML = "";
 
   for (const status in tree) {
-    container.innerHTML += `
+    c.innerHTML += `
       <div class="tree-item">
         <span class="icon" onclick="toggle(this)">+</span>
         <span class="folder-name">${status}</span>
@@ -36,23 +36,33 @@ function buildTree(data) {
               <span class="folder-name">${judul}</span>
             </div>
             <ul style="display:none">
-              ${Object.keys(tree[status][judul]).map(jenis => `
+              ${Object.keys(tree[status][judul]).map(instrumen => `
                 <li>
                   <div class="tree-item">
                     <span class="icon" onclick="toggle(this)">+</span>
-                    <span class="folder-name">${jenis}</span>
+                    <span class="folder-name">${instrumen}</span>
                   </div>
                   <ul style="display:none">
-                    ${Object.keys(tree[status][judul][jenis]).map(kode => `
+                    ${Object.keys(tree[status][judul][instrumen]).map(jenis => `
                       <li>
                         <div class="tree-item">
                           <span class="icon" onclick="toggle(this)">+</span>
-                          <span class="folder-name">${kode}</span>
+                          <span class="folder-name">${jenis}</span>
                         </div>
                         <ul style="display:none">
-                          ${tree[status][judul][jenis][kode].map(p => `
+                          ${Object.keys(tree[status][judul][instrumen][jenis]).map(kode => `
                             <li>
-                              📄 <a onclick="openPDF('${p.file}')">${p.periode}</a>
+                              <div class="tree-item">
+                                <span class="icon" onclick="toggle(this)">+</span>
+                                <span class="folder-name">${kode}</span>
+                              </div>
+                              <ul style="display:none">
+                                ${tree[status][judul][instrumen][jenis][kode].map(p => `
+                                  <li>
+                                    📄 <a onclick="openPDF('${p.file}')">${p.periode}</a>
+                                  </li>
+                                `).join("")}
+                              </ul>
                             </li>
                           `).join("")}
                         </ul>
@@ -69,7 +79,6 @@ function buildTree(data) {
   }
 }
 
-// ================== TOGGLE ==================
 function toggle(el) {
   const ul = el.parentElement.nextElementSibling;
   if (!ul) return;
@@ -78,20 +87,19 @@ function toggle(el) {
   el.textContent = open ? "+" : "-";
 }
 
-// ================== SEARCH ==================
+/* SEARCH */
 function searchArsip(keyword) {
   const box = document.getElementById("searchResult");
   box.innerHTML = "";
 
   if (!keyword || keyword.length < 2) return;
 
-  keyword = keyword.toLowerCase().trim();
+  keyword = keyword.toLowerCase();
 
   const hasil = allData.filter(d =>
     (d.kode && d.kode.toLowerCase().includes(keyword)) ||
-    (d.jenis && d.jenis.toLowerCase().includes(keyword)) ||
-    (d.judul && d.judul.toLowerCase().includes(keyword)) ||
-    (d.status && d.status.toLowerCase().includes(keyword))
+    (d.instrumen && d.instrumen.toLowerCase().includes(keyword)) ||
+    (d.jenis && d.jenis.toLowerCase().includes(keyword))
   );
 
   if (hasil.length === 0) {
@@ -111,6 +119,7 @@ function searchArsip(keyword) {
       box.innerHTML += `
         <div class="search-item">
           <b>${d.kode}</b> (${d.jenis})<br>
+          <small>${d.instrumen}</small><br>
           <small>${d.periode}</small><br>
           <a onclick="openPDF('${d.file}')">Buka PDF</a>
         </div>
@@ -119,14 +128,7 @@ function searchArsip(keyword) {
   }
 }
 
-// ================== PDF VIEWER ==================
+/* PDF */
 function openPDF(url) {
   if (url.includes("drive.google.com")) {
-    const id = url.match(/\/d\/([^/]+)/)?.[1];
-    if (id) {
-      url = `https://docs.google.com/gview?url=https://drive.google.com/uc?id=${id}&embedded=true`;
-    }
-  }
-  document.getElementById("pdfViewer").src = url;
-}
-
+    const id
