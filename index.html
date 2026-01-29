@@ -2,38 +2,31 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Sistem Arsip</title>
+  <title>Sistem Arsip Kalibrasi</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
 
-  <!-- ===== SIDEBAR ===== -->
   <div class="sidebar">
     <h2>📂 Sistem Arsip</h2>
 
-    <!-- SEARCH -->
     <input
       type="text"
       id="searchInput"
-      placeholder="Cari kode (WI002, WI232...)"
+      placeholder="Cari WI002 / instrumen / jenis..."
       oninput="searchArsip(this.value)"
     >
 
-    <!-- HASIL SEARCH -->
     <div id="searchResult"></div>
 
     <hr>
 
-    <!-- TREE ARSIP -->
     <div id="arsip"></div>
   </div>
 
-  <!-- ===== VIEWER ===== -->
   <div class="viewer">
     <div class="viewer-header">📄 Preview Dokumen</div>
     <iframe id="pdfViewer"></iframe>
@@ -41,7 +34,6 @@
 
 </div>
 
-<!-- JS -->
 <script src="script.js"></script>
 </body>
 </html>
