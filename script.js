@@ -5,10 +5,14 @@ function getQueryParam(name) {
 }
 const folderToOpen = getQueryParam("folder");
 
-// Fetch data JSON
+let arsipData = [];
+
 fetch("data.json")
   .then(res => res.json())
-  .then(data => build(data));
+  .then(data => {
+    arsipData = data;
+    build(data);
+  });
 
 function build(data) {
   const tree = {};
@@ -92,52 +96,48 @@ function render(tree) {
 
 // Toggle folder
 function toggle(iconEl) {
-  const nextUl = iconEl.parentElement.nextElementSibling;
-  if (!nextUl) return;
+  const ul = iconEl.parentElement.nextElementSibling;
+  if (!ul) return;
 
-  if (nextUl.style.display === "none") {
-    nextUl.style.display = "block";
-    iconEl.textContent = "-";
-  } else {
-    nextUl.style.display = "none";
-    iconEl.textContent = "+";
-  }
+  const open = ul.style.display === "block";
+  ul.style.display = open ? "none" : "block";
+  iconEl.textContent = open ? "+" : "-";
 }
 
-// Tandai folder aktif
-function selectItem(el) {
-  document.querySelectorAll(".active-item").forEach(item => item.classList.remove("active-item"));
-  el.parentElement.classList.add("active-item");
-}
+document.getElementById("searchInput").addEventListener("input", e => {
+  const key = e.target.value.toLowerCase();
+  const box = document.getElementById("searchResult");
+  box.innerHTML = "";
 
-// Buka folder target dari QR (hanya folder target terbuka, yang lain tetap tertutup)
-function openFolderByName(folderName) {
-  document.querySelectorAll(".folder-name").forEach(el => {
-    const nextUl = el.parentElement.nextElementSibling;
-    const icon = el.parentElement.querySelector(".icon");
+  if (key.length < 2) return;
 
-    if (el.textContent.trim() === folderName) {
-      // buka folder target
-      if (nextUl && icon) {
-        nextUl.style.display = "block";
-        icon.textContent = "-";
-      }
-      selectItem(el);
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
+  const results = arsipData.filter(d =>
+    d.kode.toLowerCase().includes(key)
+  );
 
-      // opsional: buka PDF pertama otomatis
-      const firstPdfLink = nextUl?.querySelector("a");
-      if (firstPdfLink) firstPdfLink.click();
-    } else {
-      // tutup semua folder lain
-      if (nextUl && icon) {
-        nextUl.style.display = "none";
-        icon.textContent = "+";
-      }
-      el.parentElement.classList.remove("active-item");
-    }
+  const grouped = {};
+  results.forEach(d => {
+    if (!grouped[d.status]) grouped[d.status] = {};
+    if (!grouped[d.status][d.jenis]) grouped[d.status][d.jenis] = [];
+    grouped[d.status][d.jenis].push(d);
   });
-}
+
+  for (const status in grouped) {
+    box.innerHTML += `<h4>${status}</h4>`;
+
+    for (const jenis in grouped[status]) {
+      box.innerHTML += `<strong>${jenis}</strong>`;
+
+      grouped[status][jenis].forEach(p => {
+        box.innerHTML += `
+          <div class="search-item" onclick="openPDF('${p.file}')">
+            ${p.kode} – ${p.periode}
+          </div>
+        `;
+      });
+    }
+  }
+});
 
 // Buka PDF
 function openPDF(url) {
@@ -151,6 +151,7 @@ function openPDF(url) {
   }
   document.getElementById("pdfViewer").src = url;
 }
+
 
 
 
