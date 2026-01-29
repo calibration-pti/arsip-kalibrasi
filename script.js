@@ -1,3 +1,11 @@
+// Ambil parameter folder dari QR
+function getQueryParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
+const folderToOpen = getQueryParam("folder");
+
+// Fetch data JSON
 fetch("data.json")
   .then(res => res.json())
   .then(data => build(data));
@@ -15,6 +23,21 @@ function build(data) {
   });
 
   render(tree);
+  // Jika ada folder dari QR, buka otomatis
+  if (folderToOpen) {
+    document.querySelectorAll(".folder-name").forEach(el => {
+      if (el.textContent.trim() === folderToOpen) {
+        const icon = el.parentElement.querySelector(".icon");
+        const nextUl = el.parentElement.nextElementSibling;
+        if (nextUl && icon) {
+          nextUl.style.display = "block";
+          icon.textContent = "-";
+        }
+        selectItem(el);
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    });
+  }
 }
 
 function render(tree) {
@@ -89,6 +112,10 @@ function toggle(el) {
   }
 }
 
+function selectItem(el) {
+  document.querySelectorAll(".active-item").forEach(item => item.classList.remove("active-item"));
+  el.parentElement.classList.add("active-item");
+}
 
 function openPDF(url) {
   // Jika link Google Drive
@@ -103,6 +130,7 @@ function openPDF(url) {
   }
   document.getElementById("pdfViewer").src = url;
 }
+
 
 
 
