@@ -1,8 +1,3 @@
-<div id="arsip"></div>
-
-<iframe id="pdfViewer" style="width:100%; height:600px;"></iframe>
-
-<script>
 fetch("data.json")
   .then(res => res.json())
   .then(data => build(data));
@@ -89,3 +84,4 @@ function openPDF(url) {
   document.getElementById("pdfViewer").src = url;
 }
 </script>
+
