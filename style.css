@@ -147,8 +147,8 @@ iframe {
 }
 
 .highlight {
-  background-color: #e6f4ea;
-  border-left: 4px solid #1e7e34;
+  background-color: #fff3b0;
+  border-left: 4px solid #f4b400;
   padding-left: 6px;
   border-radius: 4px;
   animation: flash 1.2s ease-in-out;
@@ -159,5 +159,6 @@ iframe {
   50%  { background-color: #ffe066; }
   100% { background-color: #fff3b0; }
 }
+
 
 
