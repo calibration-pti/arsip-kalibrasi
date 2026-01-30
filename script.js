@@ -133,5 +133,45 @@ function openPDF(url) {
   document.getElementById("pdfViewer").src = url;
 }
 
+let rawData = [];
+
+function searchKode(keyword) {
+  const box = document.getElementById("searchResult");
+  box.innerHTML = "";
+  if (!keyword) return;
+
+  const key = keyword.toLowerCase();
+
+  const hasil = rawData.filter(d =>
+    d.kode?.toLowerCase().includes(key)
+  );
+
+  if (hasil.length === 0) {
+    box.innerHTML = "<i>Data tidak ditemukan</i>";
+    return;
+  }
+
+  box.innerHTML = `
+    <table border="1" cellpadding="4" style="border-collapse:collapse; width:100%">
+      <tr>
+        <th>Kode</th>
+        <th>Status</th>
+        <th>Judul</th>
+        <th>Instrumen</th>
+        <th>Jenis</th>
+      </tr>
+      ${hasil.map(h => `
+        <tr>
+          <td>${h.kode}</td>
+          <td>${h.status}</td>
+          <td>${h.judul}</td>
+          <td>${h.instrumen}</td>
+          <td>${h.jenis}</td>
+        </tr>
+      `).join("")}
+    </table>
+  `;
+}
+
 
 
