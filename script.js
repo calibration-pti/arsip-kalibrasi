@@ -25,12 +25,17 @@ function build(data) {
 function autoOpenFromQR() {
   const target = getParam("open");
   if (!target) return;
-  
-  const paths = target.split("|");
+
+  const paths = target
+    .split("|")
+    .filter(p => p.trim() !== ""); // ⬅ INI KUNCI
+
   let currentPath = "";
 
   paths.forEach(part => {
-    currentPath = currentPath ? currentPath + "|" + part : part;
+    currentPath = currentPath
+      ? currentPath + "|" + part
+      : part;
 
     const el = document.querySelector(`[data-path="${currentPath}"]`);
     if (el) {
@@ -39,10 +44,7 @@ function autoOpenFromQR() {
         toggle(el);
       }
     }
-  });
-}
-
-  
+  });  
 }
 
 function render(tree) {
@@ -178,6 +180,7 @@ function searchKode(keyword) {
     `;
   });
 }
+
 
 
 
