@@ -106,29 +106,6 @@ function render(tree) {
 }
 
 function toggle(el) {
-  // kalau klik <a>, naik ke <li>
-  let parent = el.tagName === "A" ? el.parentElement : el;
-  let next = parent.nextElementSibling;
-
-  // fallback: kalau struktur <li><a><ul>
-  if (!next && parent.tagName === "LI") {
-    next = parent.querySelector("ul");
-  }
-
-  if (!next) return;
-
-  const icon = el.querySelector(".icon");
-
-  if (next.style.display === "block") {
-    next.style.display = "none";
-    if (icon) icon.textContent = "○";
-  } else {
-    next.style.display = "block";
-    if (icon) icon.textContent = "▼";
-  }
-}
-
-function toggle(el) {
   const next = el.nextElementSibling;
   if (next) {
     const icon = el.querySelector(".icon");
@@ -141,6 +118,21 @@ function toggle(el) {
     }
   }
 }
+
+function openPDF(url) {
+  // Jika link Google Drive
+  if (url.includes("drive.google.com")) {
+    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      const fileId = match[1];
+      const directLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
+      // Pakai Google Docs Viewer agar tampil di iframe
+      url = `https://docs.google.com/gview?url=${encodeURIComponent(directLink)}&embedded=true`;
+    }
+  }
+  document.getElementById("pdfViewer").src = url;
+}
+
 let rawData = [];
 
 fetch("data.json")
@@ -188,6 +180,7 @@ function searchKode(keyword) {
     `;
   });
 }
+
 
 
 
