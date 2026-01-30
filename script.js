@@ -28,8 +28,11 @@ function autoOpenFromQR() {
   const target = getParam("open");
   if (!target) return;
 
+  target = decodeURIComponent(target);
+  
   const paths = target.split("|");
   let currentPath = "";
+  let lastEl = null;
 
   paths.forEach(part => {
     currentPath = currentPath ? currentPath + "|" + part : part;
@@ -192,9 +195,6 @@ function searchKode(keyword) {
     `;
   });
 }
-
-
-
 
 
 
