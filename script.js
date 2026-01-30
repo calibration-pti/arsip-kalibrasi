@@ -147,14 +147,18 @@ function searchKode(keyword) {
   const tbody = table.querySelector("tbody");
   tbody.innerHTML = "";
 
-  if (!keyword) return;
-
+  if (!keyword) {
+    table.style.display = "none";   // ⬅ sembunyikan
+    return;
+  }
   const key = keyword.toLowerCase();
 
   const hasil = rawData.filter(d =>
     String(d.kode).toLowerCase().includes(key)
   );
 
+  table.style.display = "table";   // ⬅ tampilkan
+  
   if (hasil.length === 0) {
     tbody.innerHTML = `
       <tr>
@@ -170,11 +174,13 @@ function searchKode(keyword) {
         <td>${h.kode}</td>
         <td>${h.status}</td>
         <td>${h.judul}</td>
-        <td>${h.instrumen} | ${h.jenis}</td>
+        <td>${h.instrumen}</td>
+        <td>${h.jenis}</td>
       </tr>
     `;
   });
 }
+
 
 
 
