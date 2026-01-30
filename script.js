@@ -28,6 +28,9 @@ function autoOpenFromQR() {
   const target = getParam("open");
   if (!target) return;
 
+    // buang pipe di akhir kalau ada
+  target = target.replace(/\|+$/, "");
+  
   const paths = target.split("|");
   let currentPath = "";
 
@@ -53,7 +56,7 @@ function render(tree) {
 
   for (const status in tree) {
     container.innerHTML += `
-      <h3 onclick="toggle(this)">
+      <h3 data-path="${status}" onclick="toggle(this)">
         <span class="icon">○</span> ${status}
       </h3>
       <ul style="display:none">
@@ -132,6 +135,7 @@ function openPDF(url) {
   }
   document.getElementById("pdfViewer").src = url;
 }
+
 
 
 
