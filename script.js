@@ -83,13 +83,13 @@ function render(tree) {
                   <ul style="display:none">
                     ${Object.keys(tree[status][judul][instrumen]).map(jenis => `
                       <li>
-                        📂 <a href="#" data-path="${status}|${judul}|${instrumen}|${jenis}" onclick="toggle(this);return false;">
+                        📂 <a href="#" data-path="${status}%${judul}%${instrumen}%${jenis}" onclick="toggle(this);return false;">
                           <span class="icon">○</span> ${jenis}
                         </a>
                         <ul style="display:none">
                           ${Object.keys(tree[status][judul][instrumen][jenis]).map(kode => `
                             <li>
-                              📂 <a href="#" data-path="${status}|${judul}|${instrumen}|${jenis}|${kode}" onclick="toggle(this);return false;">
+                              📂 <a href="#" data-path="${status}%${judul}%${instrumen}%${jenis}%${kode}" onclick="toggle(this);return false;">
                                 <span class="icon">○</span> ${kode}
                               </a>
                               <ul style="display:none">
@@ -192,6 +192,7 @@ function searchKode(keyword) {
     `;
   });
 }
+
 
 
 
