@@ -28,6 +28,7 @@ function autoOpenFromQR() {
   const target = getParam("open");
   if (!target) return;
 
+  let target = getParam("open");
   target = decodeURIComponent(target);
   
   const paths = target.split("|");
@@ -37,7 +38,7 @@ function autoOpenFromQR() {
   paths.forEach(part => {
     currentPath = currentPath ? currentPath + "|" + part : part;
 
-    const el = document.querySelector(`[data-path="${currentPath}"]`);
+    const el = document.querySelector(`[data-path="${CSS.escape(currentPath)}"]`);
     if (el) {
       const ul = el.nextElementSibling;
       if (ul && ul.style.display === "none") {
@@ -195,6 +196,7 @@ function searchKode(keyword) {
     `;
   });
 }
+
 
 
 
