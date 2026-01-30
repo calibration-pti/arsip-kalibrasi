@@ -128,20 +128,19 @@ function toggle(el) {
   }
 }
 
-function openPDF(url) {
-  // Jika link Google Drive
-  if (url.includes("drive.google.com")) {
-    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    if (match && match[1]) {
-      const fileId = match[1];
-      const directLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
-      // Pakai Google Docs Viewer agar tampil di iframe
-      url = `https://docs.google.com/gview?url=${encodeURIComponent(directLink)}&embedded=true`;
+function toggle(el) {
+  const next = el.nextElementSibling;
+  if (next) {
+    const icon = el.querySelector(".icon");
+    if (next.style.display === "none") {
+      next.style.display = "block";
+      if (icon) icon.textContent = "▼";
+    } else {
+      next.style.display = "none";
+      if (icon) icon.textContent = "○";
     }
   }
-  document.getElementById("pdfViewer").src = url;
 }
-
 let rawData = [];
 
 fetch("data.json")
@@ -189,6 +188,7 @@ function searchKode(keyword) {
     `;
   });
 }
+
 
 
 
