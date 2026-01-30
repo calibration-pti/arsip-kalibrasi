@@ -40,8 +40,20 @@ function autoOpenFromQR() {
       if (ul && ul.style.display === "none") {
         toggle(el);
       }
+      lastEl = el; // simpan elemen terakhir
     }
   });
+  
+  // 🔥 HIGHLIGHT ELEMEN TERAKHIR
+  if (lastEl) {
+    lastEl.classList.add("highlight");
+
+    // optional: scroll otomatis ke item
+    lastEl.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  }
 }
 
   
@@ -180,6 +192,7 @@ function searchKode(keyword) {
     `;
   });
 }
+
 
 
 
