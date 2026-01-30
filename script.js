@@ -133,6 +133,57 @@ function openPDF(url) {
   document.getElementById("pdfViewer").src = url;
 }
 
+let rawData = [];
+
+fetch("data.json")
+  .then(res => res.json())
+  .then(data => {
+    rawData = data;   // ← INI WAJIB
+    build(data);      // tree kamu
+  });
+
+function searchKode(keyword) {
+  const table = document.getElementById("searchResult");
+  const tbody = table.querySelector("tbody");
+  tbody.innerHTML = "";
+
+  if (!keyword) {
+    table.style.display = "none";   // ⬅ sembunyikan
+    return;
+  }
+  const key = keyword.toLowerCase();
+
+  const hasil = rawData.filter(d =>
+    String(d.kode).toLowerCase().includes(key)
+  );
+
+  table.style.display = "table";   // ⬅ tampilkan
+  
+  if (hasil.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="4"><i>Data tidak ditemukan</i></td>
+      </tr>
+    `;
+    return;
+  }
+
+  hasil.forEach(h => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${h.kode}</td>
+        <td>${h.status}</td>
+        <td>${h.judul}</td>
+        <td>${h.instrumen}</td>
+        <td>${h.jenis}</td>
+      </tr>
+    `;
+  });
+}
+
+
+
+
 
 
 
