@@ -4,15 +4,9 @@ function getParam(name) {
 }
 
 // Fetch data JSON
-let rawData = [];
-
 fetch("data.json")
   .then(res => res.json())
-  .then(data => {
-    rawData = data;   // ← INI WAJIB
-    build(data);      // tree kamu
-  });
-
+  .then(data => build(data));
 
 function build(data) {
   const tree = {};
@@ -33,17 +27,12 @@ function build(data) {
 function autoOpenFromQR() {
   const target = getParam("open");
   if (!target) return;
-
-  const paths = target
-    .split("|")
-    .filter(p => p.trim() !== ""); // ⬅ INI KUNCI
-
+  
+  const paths = target.split("|");
   let currentPath = "";
 
   paths.forEach(part => {
-    currentPath = currentPath
-      ? currentPath + "|" + part
-      : part;
+    currentPath = currentPath ? currentPath + "|" + part : part;
 
     const el = document.querySelector(`[data-path="${currentPath}"]`);
     if (el) {
@@ -52,7 +41,10 @@ function autoOpenFromQR() {
         toggle(el);
       }
     }
-  });  
+  });
+}
+
+  
 }
 
 function render(tree) {
@@ -140,57 +132,6 @@ function openPDF(url) {
   }
   document.getElementById("pdfViewer").src = url;
 }
-
-function searchKode(keyword) {
-  const table = document.getElementById("searchResult");
-  const tbody = table.querySelector("tbody");
-  tbody.innerHTML = "";
-
-  if (!keyword) {
-    table.style.display = "none";   // ⬅ sembunyikan
-    return;
-  }
-  const key = keyword.toLowerCase();
-
-  const hasil = rawData.filter(d =>
-    String(d.kode).toLowerCase().includes(key)
-  );
-
-  table.style.display = "table";   // ⬅ tampilkan
-  
-  if (hasil.length === 0) {
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="4"><i>Data tidak ditemukan</i></td>
-      </tr>
-    `;
-    return;
-  }
-
-  hasil.forEach(h => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${h.kode}</td>
-        <td>${h.status}</td>
-        <td>${h.judul}</td>
-        <td>${h.instrumen}</td>
-        <td>${h.jenis}</td>
-      </tr>
-    `;
-  });
-}
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
