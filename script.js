@@ -27,9 +27,6 @@ function build(data) {
 function autoOpenFromQR() {
   const target = getParam("open");
   if (!target) return;
-
-    // buang pipe di akhir kalau ada
-  target = target.replace(/\|+$/, "");
   
   const paths = target.split("|");
   let currentPath = "";
@@ -135,6 +132,7 @@ function openPDF(url) {
   }
   document.getElementById("pdfViewer").src = url;
 }
+
 
 
 
