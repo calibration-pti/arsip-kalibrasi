@@ -143,8 +143,10 @@ fetch("data.json")
   });
 
 function searchKode(keyword) {
-  const box = document.getElementById("searchResult");
-  box.innerHTML = "";
+  const table = document.getElementById("searchResult");
+  const tbody = table.querySelector("tbody");
+  tbody.innerHTML = "";
+
   if (!keyword) return;
 
   const key = keyword.toLowerCase();
@@ -154,31 +156,27 @@ function searchKode(keyword) {
   );
 
   if (hasil.length === 0) {
-    box.innerHTML = "<i>Data tidak ditemukan</i>";
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="4"><i>Data tidak ditemukan</i></td>
+      </tr>
+    `;
     return;
   }
 
-  box.innerHTML = `
-    <table border="1" cellpadding="4" style="border-collapse:collapse; width:100%">
+  hasil.forEach(h => {
+    tbody.innerHTML += `
       <tr>
-        <th>Kode</th>
-        <th>Status</th>
-        <th>Judul</th>
-        <th>Instrumen</th>
-        <th>Jenis</th>
+        <td>${h.kode}</td>
+        <td>${h.status}</td>
+        <td>${h.judul}</td>
+        <td>${h.instrumen} | ${h.jenis}</td>
       </tr>
-      ${hasil.map(h => `
-        <tr>
-          <td>${h.kode}</td>
-          <td>${h.status}</td>
-          <td>${h.judul}</td>
-          <td>${h.instrumen}</td>
-          <td>${h.jenis}</td>
-        </tr>
-      `).join("")}
-    </table>
-  `;
+    `;
+  });
 }
+
+
 
 
 
