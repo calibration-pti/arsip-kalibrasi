@@ -1,3 +1,8 @@
+function getParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
+
 // Fetch data JSON
 fetch("data.json")
   .then(res => res.json())
@@ -16,6 +21,29 @@ function build(data) {
   });
 
   render(tree);
+
+  autoOpenFromQR();
+
+function autoOpenFromQR() {
+  const target = getParam("open");
+  if (!target) return;
+
+  const paths = target.split("|");
+  let currentPath = "";
+
+  paths.forEach(part => {
+    currentPath = currentPath ? currentPath + "|" + part : part;
+
+    const el = document.querySelector(`[data-path="${currentPath}"]`);
+    if (el) {
+      const ul = el.nextElementSibling;
+      if (ul && ul.style.display === "none") {
+        toggle(el);
+      }
+    }
+  });
+}
+
   
 }
 
@@ -31,25 +59,25 @@ function render(tree) {
       <ul style="display:none">
         ${Object.keys(tree[status]).map(judul => `
           <li>
-            📁 <a href="#" onclick="toggle(this);return false;">
+            📁 <a href="#" data-path="${status}|${judul}" onclick="toggle(this);return false;">
               <span class="icon">○</span> ${judul}
             </a>
             <ul style="display:none">
               ${Object.keys(tree[status][judul]).map(instrumen => `
                 <li>
-                  📂 <a href="#" onclick="toggle(this);return false;">
+                  📂 <a href="#" data-path="${status}|${judul}|${instrumen}" onclick="toggle(this);return false;">
                     <span class="icon">○</span> ${instrumen}
                   </a>
                   <ul style="display:none">
                     ${Object.keys(tree[status][judul][instrumen]).map(jenis => `
                       <li>
-                        📂 <a href="#" onclick="toggle(this);return false;">
+                        📂 <a href="#" data-path="${status}|${judul}|${instrumen}|${jenis}" onclick="toggle(this);return false;">
                           <span class="icon">○</span> ${jenis}
                         </a>
                         <ul style="display:none">
                           ${Object.keys(tree[status][judul][instrumen][jenis]).map(kode => `
                             <li>
-                              📂 <a href="#" onclick="toggle(this);return false;">
+                              📂 <a href="#" data-path="${status}|${judul}|${instrumen}|${jenis}|${kode}" onclick="toggle(this);return false;">
                                 <span class="icon">○</span> ${kode}
                               </a>
                               <ul style="display:none">
@@ -104,5 +132,6 @@ function openPDF(url) {
   }
   document.getElementById("pdfViewer").src = url;
 }
+
 
 
