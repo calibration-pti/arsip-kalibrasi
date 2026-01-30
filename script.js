@@ -106,16 +106,25 @@ function render(tree) {
 }
 
 function toggle(el) {
-  const next = el.nextElementSibling;
-  if (next) {
-    const icon = el.querySelector(".icon");
-    if (next.style.display === "none") {
-      next.style.display = "block";
-      if (icon) icon.textContent = "▼";
-    } else {
-      next.style.display = "none";
-      if (icon) icon.textContent = "○";
-    }
+  // kalau klik <a>, naik ke <li>
+  let parent = el.tagName === "A" ? el.parentElement : el;
+  let next = parent.nextElementSibling;
+
+  // fallback: kalau struktur <li><a><ul>
+  if (!next && parent.tagName === "LI") {
+    next = parent.querySelector("ul");
+  }
+
+  if (!next) return;
+
+  const icon = el.querySelector(".icon");
+
+  if (next.style.display === "block") {
+    next.style.display = "none";
+    if (icon) icon.textContent = "○";
+  } else {
+    next.style.display = "block";
+    if (icon) icon.textContent = "▼";
   }
 }
 
@@ -180,6 +189,7 @@ function searchKode(keyword) {
     `;
   });
 }
+
 
 
 
