@@ -6,11 +6,20 @@
 </head>
 <body>
 
-<input
-  id="searchBox"
-  placeholder="Cari WI212..."
-  oninput="searchKode(this.value)"
->
+<div class="topbar">
+  <div class="topbar-left">
+    <img src="logo.png" class="logo">
+    <span class="app-title">Sistem Arsip Kalibrasi</span>
+  </div>
+
+  <div class="topbar-right">
+    <input
+      id="searchBox"
+      placeholder="Cari kode (contoh: WI212)"
+      oninput="searchKode(this.value)"
+    >
+  </div>
+</div>
 
 <table id="searchResult" border="1" style="width:100%; margin-bottom:12px">
   <thead>
@@ -43,6 +52,7 @@
 <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
