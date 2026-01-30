@@ -4,9 +4,14 @@ function getParam(name) {
 }
 
 // Fetch data JSON
+let rawData = [];
+
 fetch("data.json")
   .then(res => res.json())
-  .then(data => build(data));
+  .then(data => {
+    rawData = data;   // ← INI WAJIB
+    build(data);      // tree kamu
+  });
 
 function build(data) {
   const tree = {};
@@ -133,14 +138,6 @@ function openPDF(url) {
   document.getElementById("pdfViewer").src = url;
 }
 
-let rawData = [];
-
-fetch("data.json")
-  .then(res => res.json())
-  .then(data => {
-    rawData = data;   // ← INI WAJIB
-    build(data);      // tree kamu
-  });
 
 function searchKode(keyword) {
   const table = document.getElementById("searchResult");
@@ -180,6 +177,7 @@ function searchKode(keyword) {
     `;
   });
 }
+
 
 
 
