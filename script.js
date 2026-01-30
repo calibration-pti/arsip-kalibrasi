@@ -135,6 +135,13 @@ function openPDF(url) {
 
 let rawData = [];
 
+fetch("data.json")
+  .then(res => res.json())
+  .then(data => {
+    rawData = data;   // ← INI WAJIB
+    build(data);      // tree kamu
+  });
+
 function searchKode(keyword) {
   const box = document.getElementById("searchResult");
   box.innerHTML = "";
@@ -143,7 +150,7 @@ function searchKode(keyword) {
   const key = keyword.toLowerCase();
 
   const hasil = rawData.filter(d =>
-    d.kode?.toLowerCase().includes(key)
+    String(d.kode).toLowerCase().includes(key)
   );
 
   if (hasil.length === 0) {
@@ -172,6 +179,7 @@ function searchKode(keyword) {
     </table>
   `;
 }
+
 
 
 
