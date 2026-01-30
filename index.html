@@ -6,10 +6,40 @@
 </head>
 <body>
 
+<div class="topbar">
+  <div class="topbar-left">
+    <img src="logo.png" class="logo">
+  </div>
+
+  <div class="topbar-right">
+    <input
+      id="searchBox"
+      placeholder="Cari kode (contoh: WI212)"
+      oninput="searchKode(this.value)"
+    >
+  </div>
+</div>
+
+<table id="searchResult" 
+       border="1" 
+       style="width:100%; margin-bottom:12px border-collapse:collapse; display:none">
+  <thead>
+    <tr>
+      <th>Kode</th>
+      <th>Status</th>
+      <th>Judul</th>
+      <th>Instrumen</th>
+      <th>Jenis</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+  
 <div class="container">
   <!-- KIRI -->
   <div class="sidebar">
-    <h2>📂 Sistem Arsip</h2>
+    <h2>📂 Sistem Arsip Kalibrasi</h2>
     <div class="status-badge">Status: AKTIF</div>
     <div id="arsip"></div>
   </div>
@@ -24,3 +54,11 @@
 <script src="script.js"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
