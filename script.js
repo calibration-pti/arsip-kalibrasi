@@ -28,11 +28,11 @@ function autoOpenFromQR() {
   const target = getParam("open");
   if (!target) return;
   
-  const paths = target.split("%");
+  const paths = target.split("|");
   let currentPath = "";
 
   paths.forEach(part => {
-    currentPath = currentPath ? currentPath + "%" + part : part;
+    currentPath = currentPath ? currentPath + "|" + part : part;
 
     const el = document.querySelector(`[data-path="${currentPath}"]`);
     if (el) {
@@ -71,7 +71,7 @@ function render(tree) {
       <ul style="display:none">
         ${Object.keys(tree[status]).map(judul => `
           <li>
-            📁 <a href="#" data-path="${status}%${judul}" onclick="toggle(this);return false;">
+            📁 <a href="#" data-path="${status}|${judul}" onclick="toggle(this);return false;">
               <span class="icon">○</span> ${judul}
             </a>
             <ul style="display:none">
@@ -192,6 +192,7 @@ function searchKode(keyword) {
     `;
   });
 }
+
 
 
 
