@@ -6,22 +6,11 @@
 </head>
 <body>
 
-<div class="topbar">
-  <div class="topbar-left">
-    <img src="logo.png" class="logo">
-    <span class="app-title">Sistem Arsip Kalibrasi</span>
-  </div>
-
-  <div class="topbar-right">
-    <input
-      id="searchBox"
-      placeholder="Cari kode (contoh: WI212)"
-      oninput="searchKode(this.value)"
-    >
-  </div>
-</div>
-
-<div id="searchResult"></div>
+<input
+  id="searchBox"
+  placeholder="Cari WI212..."
+  oninput="searchKode(this.value)"
+>
 
 <table id="searchResult" border="1" style="width:100%; margin-bottom:12px">
   <thead>
@@ -34,6 +23,7 @@
   </thead>
   <tbody></tbody>
 </table>
+
   
 <div class="container">
   <!-- KIRI -->
